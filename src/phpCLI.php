@@ -14,6 +14,7 @@ class phpCLI {
   protected $Path = null;
   protected $Debug = false;
   protected $Reflector = null;
+  protected $Settings = null;
   protected $CLI;
 
   public function __construct($argv){
@@ -55,18 +56,10 @@ class phpCLI {
         $CLI = new $strCommandName();
         $CLI->{$strMethodName}($argv);
       } else {
-        $this->error('Could not find Command');
+        $this->output('Could not find Command');
       }
     } else {
-      $this->error("Could not identify the Command and/or Action");
-    }
-  }
-
-  protected function set($string, $color = 'default'){
-    if(isset($this->Colors[$color])){
-      return $this->Colors[$color] . $string . $this->Colors['default'];
-    } else {
-      return $string;
+      $this->output("Could not identify the Command and/or Action");
     }
   }
 
@@ -74,13 +67,32 @@ class phpCLI {
     print_r($string . PHP_EOL);
   }
 
-  protected function error($string) {
-    $this->output($this->set($string, 'red'));
-  }
-
   protected function configure(){
 
     // Save Root Path
     $this->Path = dirname(\Composer\Factory::getComposerFile());
+
+    // Include main configuration file
+    if(is_file($this->Path . "/config/config.json")){
+
+      // Save all settings
+    	$this->Settings = json_decode(file_get_contents($this->Path . '/config/config.json'),true);
+
+      //MySQL Configuration Information
+      if(isset($this->Settings['sql'])){
+        if(!defined("DB_HOST")){ define("DB_HOST", $this->Settings['sql']['host']); }
+        if(!defined("DB_USERNAME")){ define("DB_USERNAME", $this->Settings['sql']['username']); }
+        if(!defined("DB_PASSWORD")){ define("DB_PASSWORD", $this->Settings['sql']['password']); }
+        if(!defined("DB_DATABASE_NAME")){ define("DB_DATABASE_NAME", $this->Settings['sql']['database']); }
+
+        // MySQL Debug
+        if(isset($this->Settings['sql']['debug'])){
+          $this->Debug = $this->Settings['sql']['debug'];
+        }
+      }
+    }
+
+    // MySQL Debug
+    if(!defined("DB_DEBUG")){ define("DB_DEBUG", $this->Debug); }
   }
 }

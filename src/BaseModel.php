@@ -9,16 +9,8 @@ use LaswitchTech\phpDB\Database;
 class BaseModel extends Database {
 
   public function __call($name, $arguments) {
-    $this->output("\033[31mNot Implemented\033[39m");
+    $this->output("Not Implemented");
     return false;
-  }
-
-  protected function set($string, $color = 'default'){
-    if(isset($this->Colors[$color])){
-      return $this->Colors[$color] . $string . $this->Colors['default'];
-    } else {
-      return $string;
-    }
   }
 
   protected function output($string) {

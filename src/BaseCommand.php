@@ -38,16 +38,16 @@ class BaseCommand {
     return false;
   }
 
+  protected function output($string) {
+    print_r($string . PHP_EOL);
+  }
+
   protected function set($string, $color = 'default'){
     if(isset($this->Colors[$color])){
       return $this->Colors[$color] . $string . $this->Colors['default'];
     } else {
       return $string;
     }
-  }
-
-  protected function output($string) {
-    print_r($string . PHP_EOL);
   }
 
   protected function error($string) {
