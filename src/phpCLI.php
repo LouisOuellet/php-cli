@@ -55,15 +55,27 @@ class phpCLI {
         $CLI = new $strCommandName();
         $CLI->{$strMethodName}($argv);
       } else {
-        $this->sendOutput('Could not find Command');
+        $this->error('Could not find Command');
       }
     } else {
-      $this->sendOutput("Could not identify the Command and/or Action");
+      $this->error("Could not identify the Command and/or Action");
     }
   }
 
-  protected function sendOutput($data) {
-    echo $data . PHP_EOL;
+  protected function set($string, $color = 'default'){
+    if(isset($this->Colors[$color])){
+      return $this->Colors[$color] . $string . $this->Colors['default'];
+    } else {
+      return $string;
+    }
+  }
+
+  protected function output($string) {
+    print_r($string . PHP_EOL);
+  }
+
+  protected function error($string) {
+    $this->output($this->set($string, 'red'));
   }
 
   protected function configure(){

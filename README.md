@@ -101,6 +101,93 @@ class HelloCommand extends BaseCommand {
 }
 ```
 
+#### Methods
+##### output()
+This method is used to output content into the terminal.
+```php
+$this->output('Hello Wolrd!');
+```
+
+##### set()
+This method is used to color content for the terminal.
+
+Available Colors:
+ * default
+ * black
+ * red
+ * green
+ * yellow
+ * blue
+ * magenta
+ * cyan
+ * light-gray
+ * dark-gray
+ * light-red
+ * light-green
+ * light-yellow
+ * light-blue
+ * light-magenta
+ * light-cyan
+ * white
+
+```php
+$this->set('Hello Wolrd!', 'magenta');
+```
+
+##### error()
+This method is used to output content in red into the terminal.
+```php
+$this->error('Hello Wolrd!');
+```
+
+##### success()
+This method is used to output content in green into the terminal.
+```php
+$this->success('Hello Wolrd!');
+```
+
+##### warning()
+This method is used to output content in yellow into the terminal.
+```php
+$this->warning('Hello Wolrd!');
+```
+
+##### info()
+This method is used to output content in cyan into the terminal.
+```php
+$this->info('Hello Wolrd!');
+```
+
+##### input($string, $options = null, $default = null)
+This method is used to request input from the terminal. There are 3 types of request you can make string, select and text.
+```php
+// String
+$this->input('What is your name?');
+
+// String with default value
+$this->input('What is your name?', 'John Doe');
+```
+
+```php
+// Select
+$this->input('Are you a?',['dog','cat','person']);
+
+// Select with default value
+$this->input('Are you a?',['dog','cat','person'],'person');
+```
+
+```php
+// Note that you can type (END/EXIT/QUIT/EOF/:Q/) to exit this request
+// Text with a limit of lines
+$this->input('What kind of person are you?',5);
+
+// Text without a limit of lines
+$this->input('What kind of person are you?',0);
+
+// Text request and prompt exits
+$this->input('What kind of person are you?',5,true);
+```
+
 ### Configurations
 The config file holds the configuration information of our CLI. Mainly, it will hold the database credentials. But you could use it to store other configurations. The configuration file must be stored in config/config.php. As this file is already being loaded in the bootstrap.
 
