@@ -54,7 +54,7 @@ class phpCLI {
 
         // Create Command
         $CLI = new $strCommandName();
-        $CLI->{$strMethodName}($argv);
+        $CLI->{$strMethodName}(array_values($argv));
       } else {
         $this->output('Could not find Command');
       }
