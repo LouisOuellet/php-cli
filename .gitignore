@@ -5,6 +5,9 @@ composer.phar
 settings.json
 *settings.json
 /vendor/
+/Command/
+/Model/
+/config/
 /tmp/
 example.php
 

@@ -1,53 +1,74 @@
 <?php
 
 //Declaring namespace
-namespace LaswitchTech\CLI;
+namespace LaswitchTech\phpCLI;
 
-class phpCLI{
-  
+//Import Factory class into the global namespace
+use Composer\Factory;
+
+//Import ReflectionClass class into the global namespace
+use \ReflectionClass;
+
+class phpCLI {
+
+  protected $Path = null;
+  protected $Debug = false;
+  protected $Reflector = null;
+  protected $CLI;
+
   public function __construct($argv){
-    $this->CLI = new CLI();
-    foreach($argv as $argument){
-      if(substr($argument, 0, 2) === '--'){
-        if($this->current != null){ array_push($this->CMD,['command' => str_replace('--','',$this->current),'options' => str_replace('-','',$this->options),'data' => $this->data]); }
-        $this->current = $argument;
-        $this->options = [];
-        $this->data = [];
-      }
-      elseif(substr($argument, 0, 1) === '-'){
-        if($this->current != null){ array_push($this->options,$argument); }
-      }
-      else {
-        if($this->current != null){ array_push($this->data,$argument); }
+
+    // Configure CLI
+    $this->configure();
+
+    // Include all model files
+    if(is_dir($this->Path . "/Model")){
+      foreach(scandir($this->Path . "/Model/") as $model){
+        if(str_contains($model, 'Model.php')){
+          require_once $this->Path . "/Model/" . $model;
+        }
       }
     }
-    if($this->current != null){ array_push($this->CMD,['command' => str_replace('--','',$this->current),'options' => str_replace('-','',$this->options),'data' => $this->data]); }
-    foreach($this->CMD as $cmd){
-      $method = $cmd['command'];
-      if(method_exists($this->CLI,$method)){
-        $this->CLI->$method($cmd['data'],$cmd['options']);
+
+    // Parse Standard Input
+    if(count($argv) > 2){
+
+      // Identify the Defining File
+      $this->Reflector = $argv[0];
+      unset($argv[0]);
+
+      // Identify the Command File
+      $strCommandName = ucfirst($argv[1] . "Command");
+      unset($argv[1]);
+
+      // Identify the Action
+      $strMethodName = $argv[2] . "Action";
+      unset($argv[2]);
+
+      // Assemble Command
+      if(is_file($this->Path . "/Command/" . $strCommandName . ".php")){
+
+        // Load Command File
+        require $this->Path . "/Command/" . $strCommandName . ".php";
+
+        // Create Command
+        $CLI = new $strCommandName();
+        $CLI->{$strMethodName}($argv);
+      } else {
+        $this->sendOutput('Could not find Command');
       }
+    } else {
+      $this->sendOutput("Could not identify the Command and/or Action");
     }
   }
 
-  protected function request($text, $mode = 'single', $max = 5){
-    if($mode == 'single'){
-      echo $text . ' ';
-      $handle = fopen ("php://stdin","r");
-      return str_replace("\n",'',fgets($handle));
-    } elseif($mode == 'multi'){
-      echo $text . " (END)" . PHP_EOL;
-      $count = 0;
-      $return = '';
-      do {
-        $line = fgets(STDIN);
-        if(in_array(str_replace("\n",'',$line),['END','EXIT','QUIT','EOF',':q',':Q',''])){
-          if($max <= 0){ $max = 1; }
-          $count = $max;
-        }
-        else { $return .= $line; $count++; }
-      } while ($count < $max || $max <= 0);
-      return $return;
-    }
+  protected function sendOutput($data) {
+    echo $data . PHP_EOL;
+  }
+
+  protected function configure(){
+
+    // Save Root Path
+    $this->Path = dirname(\Composer\Factory::getComposerFile());
   }
 }

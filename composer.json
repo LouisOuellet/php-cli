@@ -11,11 +11,13 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=5.5.0",
+        "composer/composer": "^2.4",
+        "laswitchtech/php-database": "^2.1"
     },
     "autoload": {
         "psr-4": {
-            "LaswitchTech\\CLI\\": "src/"
+            "LaswitchTech\\phpCLI\\": "src/"
         }
     }
 }
