@@ -179,4 +179,14 @@ class BaseCommand {
     if($answer == ''){ $answer = null; }
     return $answer;
   }
+
+  protected function mkdir($directory){
+    $make = dirname(__FILE__,3);
+    $directories = explode('/',$directory);
+    foreach($directories as $subdirectory){
+      $make .= '/'.$subdirectory;
+      if(!is_file($make)&&!is_dir($make)){ mkdir($make); }
+    }
+    return $make;
+  }
 }
