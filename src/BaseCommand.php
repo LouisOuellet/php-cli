@@ -38,6 +38,31 @@ class BaseCommand {
     return false;
   }
 
+  protected function configurations(){
+    $config = [];
+    if(is_file($this->Path . '/config/config.json')){
+      $config = json_decode(file_get_contents($this->Path . '/config/config.json'),true);
+    }
+    return $config;
+  }
+
+  protected function set($array = []){
+    try {
+      $config = [];
+      $this->mkdir('config');
+      if(is_file($this->Path . '/config/config.json')){
+        $config = json_decode(file_get_contents($this->Path . '/config/config.json'),true);
+      }
+      foreach($array as $key => $value){ $config[$key] = $value; }
+      $json = fopen($this->Path . '/config/config.json', 'w');
+      fwrite($json, json_encode($config, JSON_PRETTY_PRINT));
+      fclose($json);
+      return true;
+    } catch(Exception $error){
+      return false;
+    }
+  }
+
   protected function call($method, $url, $data = false){
     $curl = curl_init();
     switch ($method){
