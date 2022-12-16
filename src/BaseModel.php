@@ -9,7 +9,7 @@ use LaswitchTech\phpDB\Database;
 class BaseModel extends Database {
 
   public function __call($name, $arguments) {
-    $this->output("Not Implemented");
+    $this->output("Not implemented");
     return false;
   }
 

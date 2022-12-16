@@ -34,7 +34,7 @@ class BaseCommand {
   }
 
   public function __call($name, $arguments) {
-    $this->error("Not Implemented");
+    $this->error("Not implemented");
     return false;
   }
 

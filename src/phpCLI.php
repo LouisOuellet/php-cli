@@ -32,34 +32,42 @@ class phpCLI {
     }
 
     // Parse Standard Input
-    if(count($argv) > 2){
+    if(count($argv) > 0){
 
       // Identify the Defining File
       $this->Reflector = $argv[0];
       unset($argv[0]);
 
       // Identify the Command File
-      $strCommandName = ucfirst($argv[1] . "Command");
-      unset($argv[1]);
+      if(count($argv) > 0){
+        $strCommandName = ucfirst($argv[1] . "Command");
+        unset($argv[1]);
 
-      // Identify the Action
-      $strMethodName = $argv[2] . "Action";
-      unset($argv[2]);
+        // Identify the Action
+        if(count($argv) > 0){
+          $strMethodName = $argv[2] . "Action";
+          unset($argv[2]);
 
-      // Assemble Command
-      if(is_file($this->Path . "/Command/" . $strCommandName . ".php")){
+          // Assemble Command
+          if(is_file($this->Path . "/Command/" . $strCommandName . ".php")){
 
-        // Load Command File
-        require $this->Path . "/Command/" . $strCommandName . ".php";
+            // Load Command File
+            require $this->Path . "/Command/" . $strCommandName . ".php";
 
-        // Create Command
-        $CLI = new $strCommandName();
-        $CLI->{$strMethodName}(array_values($argv));
+            // Create Command
+            $CLI = new $strCommandName();
+            $CLI->{$strMethodName}(array_values($argv));
+          } else {
+            $this->output('Not implemented');
+          }
+        } else {
+          $this->output("Missing action");
+        }
       } else {
-        $this->output('Could not find Command');
+        $this->output("Missing command");
       }
     } else {
-      $this->output("Could not identify the Command and/or Action");
+      $this->output("Could not identify the defining file");
     }
   }
 
