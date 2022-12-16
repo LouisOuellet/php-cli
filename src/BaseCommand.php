@@ -50,7 +50,7 @@ class BaseCommand {
     return $config;
   }
 
-  protected function set($array = []){
+  protected function configure($array = []){
     try {
       $config = [];
       $this->mkdir('config');
