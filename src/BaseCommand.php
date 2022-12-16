@@ -124,7 +124,10 @@ class BaseCommand {
     switch($mode){
       case"select":
         $answer = null;
-        while(!in_array($answer,$options)){
+        foreach($options as $key => $value){
+          $options[$key] = strtoupper($value);
+        }
+        while(!in_array(strtoupper($answer),$options)){
           print_r($string . ' (');
           foreach($options as $key => $option){
             if($key > 0){ print_r('/'); }
