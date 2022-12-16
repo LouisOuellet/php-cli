@@ -9,7 +9,7 @@ use LaswitchTech\phpCLI\phpCLI;
 require 'vendor/autoload.php';
 
 // Interpret Standard Input
-if(defined('STDIN') && !empty($argv[1])){
+if(defined('STDIN') && !empty($argv)){
 
   // Start Command
   new phpCLI($argv);
