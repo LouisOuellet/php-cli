@@ -68,7 +68,24 @@ class BaseCommand {
   }
 
   protected function call($method, $url, $data = false){
+
+    // Init cURL
     $curl = curl_init();
+
+    // Optional Authentication:
+    $auth = $url;
+    if(str_contains($auth, '@')){
+      $auth = explode('@',$auth)[0];
+      if(str_contains($auth, ':')){
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $auth);
+      } else {
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , "Authorization: Bearer $auth"));
+      }
+      $url = str_replace($auth.'@','',$url);
+    }
+
+    // Handle Method
     switch ($method){
       case"POST":
         curl_setopt($curl, CURLOPT_POST, 1);
@@ -83,19 +100,6 @@ class BaseCommand {
         if($data){
           $url = sprintf("%s?%s", $url, http_build_query($data));
         }
-    }
-    // Optional Authentication:
-    $auth = $url;
-    if(str_contains($auth, '@')){
-      $auth = explode('@',$auth)[0];
-      if(str_contains($auth, '//')){ $auth = explode('//',$auth)[1]; }
-      if(str_contains($auth, ':')){
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, $auth);
-      } else {
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , "Authorization: Bearer $auth"));
-      }
-      $url = str_replace($auth.'@','',$url);
     }
 
     curl_setopt($curl, CURLOPT_URL, $url);
