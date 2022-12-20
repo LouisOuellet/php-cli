@@ -12,7 +12,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^8.0",
-        "composer/composer": "^2.4",
+        "composer/composer": "^2.5",
         "laswitchtech/php-database": "^2.1"
     },
     "autoload": {
