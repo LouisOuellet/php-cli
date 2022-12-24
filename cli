@@ -1,4 +1,6 @@
+#!/usr/bin/env php
 <?php
+session_set_cookie_params(['samesite' => 'None']);
 session_start();
 
 //Import phpCLI class into the global namespace
