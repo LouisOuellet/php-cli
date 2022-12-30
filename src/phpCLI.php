@@ -55,7 +55,7 @@ class phpCLI {
           if(is_file($this->Path . "/Command/" . $strCommandName . ".php")){
 
             // Load Command File
-            require $this->Path . "/Command/" . $strCommandName . ".php";
+            require_once $this->Path . "/Command/" . $strCommandName . ".php";
 
             // Create Command
             $CLI = new $strCommandName();
